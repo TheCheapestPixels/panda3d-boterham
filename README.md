@@ -9,7 +9,7 @@ I might add a generic pre-loader for setting up things on game load that can not
 This place could also serve as a testbed for new blend2bam features.
 
 ## Don't use this yet.
-
+But if you do, it works just like blend2bam. After installing do ```boterham myblendfile.blend newbamfile.bam```
 
 ### Currently implemented:
 * nothing
