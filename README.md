@@ -8,13 +8,13 @@ I might add a generic pre-loader for setting up things on game load that can not
 
 This place could also serve as a testbed for new blend2bam features.
 
-##Don't use this yet.
+## Don't use this yet.
 
 
-###Currently implemented:
+### Currently implemented:
 * nothing
 
-###Dream features:
+### Dream features:
 * flattening
 * merged collision shapes
 * displacement modifiers as ShaderTerrainMesh
@@ -29,5 +29,5 @@ This place could also serve as a testbed for new blend2bam features.
 * who knows what else!
 
 
-###Note
+### Note
 Some assumptions are being made and not all blend2bam functionality work. It supports version >2.8 of blender only using pbr materials.
