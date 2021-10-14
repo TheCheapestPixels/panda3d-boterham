@@ -8,14 +8,20 @@ I might add a generic pre-loader for setting up things on game load that can not
 
 This place could also serve as a testbed for new blend2bam features.
 
-## Don't use this yet.
+### Don't use this yet.
 But if you do, it works just like blend2bam. After installing do ```boterham myblendfile.blend newbamfile.bam```
 
-### Currently implemented:
-* nothing
+## Currently implemented:
+### Calling functions and replace PandaNodes with Custom Properties
+Adding a custom property in blender whose name starts with the symbol `$` will run it as a function on the NodePath. For example adding `$reparent_to` or `$flatten_strong`. You can pass arguments to this function using a dict as property value as followed: `"extra_args":[some_value]`. This is evaluated as JSON.
 
-### Dream features:
-* flattening
+A property starting with `$node().` will run the function on the first attached PandaNode. For example on a DirectionalLight one could do `$node().set_color` with value `"extra_args":[(1,0,0,1)]` to make it shine red.
+
+This is especially useful in combination with node replacement, by starting a property name with the symbol `+`. For example on an empty, one could add the property `+SequenceNode` to turn it into a sequence node. Add another property `$node().loop` to make it start playing in an endless loop.
+
+An argument that starts with the symbol `@` will be replaced with the first nodepath found through `render.find().` For example property `$reparent_to` with value `"extra_args":[@**/Camera]` will reparent the nodepath to whatever node in the scene is called Camera.
+
+## Dream features:
 * merged collision shapes
 * displacement modifiers as ShaderTerrainMesh
 * automatic LODNodes using the Decimation modifier
