@@ -3,6 +3,17 @@ import json
 import panda3d.core
 
 
+def set_lod_switches(nodepath):
+    furthest = 1024
+    step_size = furthest/len(nodepath.get_children())
+    into, outto = furthest, furthest-step_size
+    for c, child in enumerate(nodepath.get_children()):
+        nodepath.node().add_switch(into, outto)
+        into = outto
+        outto /= 2
+    furthest_out = nodepath.node().get_out(0)
+    nodepath.node().set_switch(0, furthest**4, furthest_out)
+
 def read_args(root, value_raw):
     if value_raw == "None" or value_raw == '1':
         return []
@@ -66,6 +77,7 @@ def tags_as_class(root):
         "CubicCurveseg", "RopeNode", "SheetNode", "PGItem", "PGButton", "PGEntry", "PGVirtualFrame",
         "PGScrollFrame", "PGSliderBar", "PGWaitBar", "PGTop"
     ]
+
     for panda_node in panda_nodes:
         tag = '+{}'.format(panda_node)
         for nodepath in root.find_all_matches("**/="+tag):
@@ -74,6 +86,7 @@ def tags_as_class(root):
             panda_node_class = getattr(panda3d.core, panda_node)
             new_node = panda_node_class(nodepath.name + "_"+panda_node)
             new_nodepath = nodepath.parent.attach_new_node(new_node)
+            new_nodepath.set_transform(nodepath.get_transform())
             nodepath.clear_tag(tag)
             nodepath.clear_python_tag(tag)
             for key in nodepath.get_python_tag_keys():
@@ -83,7 +96,11 @@ def tags_as_class(root):
             for child in nodepath.get_children():
                 child.reparent_to(new_nodepath)
             nodepath.detach_node()
+            nodepath = new_nodepath
             tags_as_node_function(root, nodetype=new_node)
+
+            if panda_node == 'LODNode' or panda_node == 'FadeLODNode':
+                set_lod_switches(nodepath)
 
 def evaluate_property_logic(root):
     tags_as_class(root)

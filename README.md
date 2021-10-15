@@ -21,10 +21,15 @@ This is especially useful in combination with node replacement, by starting a pr
 
 An argument that starts with the symbol `@` will be replaced with the first nodepath found through `render.find().` For example property `$reparent_to` with value `"extra_args":[@**/Camera]` will reparent the nodepath to whatever node in the scene is called Camera.
 
+### Automatic LODNodes using the Decimation modifier
+Add a Decimate modifier an name it `LOD_N`, where N is the number of LOD levels you want.
+Set the modifiers ratio to be the furthest LOD.
+Note: at the moment subdivision surface modifiers are applied AFTER LOD processing, so apply them manually for now.
+
+
 ## Dream features:
 * merged collision shapes
 * displacement modifiers as ShaderTerrainMesh
-* automatic LODNodes using the Decimation modifier
 * better handle linked instances
 * better handle textures
 * bake procedural textures as pbr material
