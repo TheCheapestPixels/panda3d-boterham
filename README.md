@@ -8,6 +8,9 @@ I might add a generic pre-loader for setting up things on game load that can not
 
 This place could also serve as a testbed for new blend2bam features.
 
+This project started by ripping everything out of blend2bam. For this reason it should carry blend2bam's license for ever and ever. Any level of professionality in this project is thanks to Moguri.
+
+
 ### Don't use this yet.
 But if you do, it works just like blend2bam. After installing do ```boterham myblendfile.blend newbamfile.bam```
 
@@ -26,12 +29,13 @@ Add a Decimate modifier an name it `LOD_N`, where N is the number of LOD levels 
 Set the modifiers ratio to be the furthest LOD.
 Note: at the moment subdivision surface modifiers are applied AFTER LOD processing, so apply them manually for now.
 
+### Decending CollisionPolygons.
+Adding the property `geom_to_collision_polygon` will recursively copy all children's GeomNodes as CollisionPolygons. Tip: Use `$flatten_strong` to combine shapes.
+
 
 ## Dream features:
-* merged collision shapes
-* displacement modifiers as ShaderTerrainMesh
-* better handle linked instances
-* better handle textures
+* displacement modifiers as ShaderTerrainMesh (partially implemented)
+* better handle linked instances (for Actors)
 * bake procedural textures as pbr material
 * handle modifiers with regards to shapekeys
 * convert object animation to armature animation

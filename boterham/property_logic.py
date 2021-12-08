@@ -38,10 +38,20 @@ def read_args(root, value_raw):
 
 def tags_as_nodepath_function(root, nodetype=panda3d.core.NodePath('nodepath')):
     funcs = dir(nodetype)
-    funcs.sort(key=lambda s: len(s))
+    custom_sort = [
+        'wrt_reparent_to',
+        'reparent_to',
+        'flatten_strong',
+    ]
+    custom_sort.reverse()
+    for s in custom_sort:
+        funcs.remove(s)
+        funcs.insert(0, s)
+    
     for func in funcs:
         tag = '${}'.format(func)
         for nodepath in root.find_all_matches("**/="+tag):
+            print(' Running NodePath function:',tag, nodepath)
             value_raw = nodepath.get_tag(tag)
             extra_args = read_args(root, value_raw)
             function = getattr(nodepath, func)
@@ -81,6 +91,7 @@ def tags_as_class(root):
     for panda_node in panda_nodes:
         tag = '+{}'.format(panda_node)
         for nodepath in root.find_all_matches("**/="+tag):
+            print(' Turn to PandaNode:',tag, nodepath)
             value_raw = nodepath.get_tag(tag)
             extra_args = read_args(root, value_raw)
             panda_node_class = getattr(panda3d.core, panda_node)
