@@ -4,7 +4,7 @@ from direct.showbase.ShowBase import ShowBase
 from .property_logic import evaluate_property_logic
 
 
-base = ShowBase()
+base = ShowBase(windowType='none')
 
 
 def nodepath_to_collision_polygons(root):
