@@ -27,20 +27,25 @@ An argument that starts with the symbol `@` will be replaced with the first node
 ### Automatic LODNodes using the Decimation modifier
 Add a Decimate modifier an name it `LOD_N`, where N is the number of LOD levels you want.
 Set the modifiers ratio to be the furthest LOD.
+Manual LODNodes was already possible by placing the property `+LODNode` (turning its children into switches)
 Note: at the moment subdivision surface modifiers are applied AFTER LOD processing, so apply them manually for now.
+
+### Empty to CollisionShape
+Using the property `+CollisionNode` now iterates over all children and looks for any of the `CollisionShape`s (CollisionSphere, CollisionBox, etc.) and will try to make sense of them based on their transforms.
+Setting these on sphere-, box- or arrow empties in blender make for nice representations. Sadly blender does not have a capsule empty but one can imagine it being sliced out of a sphere like a cookie-cutter. 
+`CollisionPolygon` only works partially/experimentally. It's better to use the following implemented technique:
 
 ### Decending CollisionPolygons.
 Adding the property `geom_to_collision_polygon` will recursively copy all children's GeomNodes as CollisionPolygons. Tip: Use `$flatten_strong` to combine shapes.
 
 
 ## Dream features:
-* displacement modifiers as ShaderTerrainMesh (partially implemented)
+* displacement modifiers as ShaderTerrainMesh (partially implemented, still wip)
 * better handle linked instances (for Actors)
 * bake procedural textures as pbr material
-* handle modifiers with regards to shapekeys
+* handle modifiers with regards to shapekeys (convert each shapekey to model, apply modifiers, parent back as shapekey)
 * convert object animation to armature animation
 * mesh to waypoint
-* edges as drawn with LineSegs
 * who knows what else!
 
 
