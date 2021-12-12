@@ -15,29 +15,28 @@ This project started by ripping everything out of blend2bam. For this reason it 
 But if you do, it works just like blend2bam. After installing do ```boterham myblendfile.blend newbamfile.bam```
 
 ## Currently implemented:
-### Calling functions and replace PandaNodes with Custom Properties
+### Calling NodePath functions and replace with PandaNodes using Custom Properties
 Adding a custom property in blender whose name starts with the symbol `$` will run it as a function on the NodePath. For example adding `$reparent_to` or `$flatten_strong`. You can pass arguments to this function using a dict as property value as followed: `"extra_args":[some_value]`. This is evaluated as JSON.
 
 A property starting with `$node().` will run the function on the first attached PandaNode. For example on a DirectionalLight one could do `$node().set_color` with value `"extra_args":[(1,0,0,1)]` to make it shine red.
 
 This is especially useful in combination with node replacement, by starting a property name with the symbol `+`. For example on an empty, one could add the property `+SequenceNode` to turn it into a sequence node. Add another property `$node().loop` to make it start playing in an endless loop.
 
-An argument that starts with the symbol `@` will be replaced with the first nodepath found through `render.find().` For example property `$reparent_to` with value `"extra_args":[@**/Camera]` will reparent the nodepath to whatever node in the scene is called Camera.
+An argument that starts with the symbol `@` will be replaced with the first nodepath found through `render.find().` For example property `$reparent_to` with value `"extra_args":["@**/Camera"]` will reparent the nodepath to whatever node in the scene is called Camera.
+
+### Empty to CollisionShape
+Using the property `+CollisionNode` now iterates over all children and looks for any of the `+CollisionShape`s (`+CollisionSphere`, `+CollisionBox`, etc.) and will try to make sense of them based on their transforms.
+Setting these on sphere-, box- or arrow empties in blender make for nice representations. Sadly blender does not have a capsule empty but one can imagine it being sliced out of a sphere like a cookie-cutter. 
+`+CollisionPolygon` only works partially/experimentally. It's better to use the following implemented technique:
+
+### Decending CollisionPolygons.
+Adding the property `geom_to_collision_polygon` will recursively copy all children's GeomNodes as CollisionPolygons. Tip: Use `$flatten_strong` to combine shapes.
 
 ### Automatic LODNodes using the Decimation modifier
 Add a Decimate modifier an name it `LOD_N`, where N is the number of LOD levels you want.
 Set the modifiers ratio to be the furthest LOD.
 Manual LODNodes was already possible by placing the property `+LODNode` (turning its children into switches)
 Note: at the moment subdivision surface modifiers are applied AFTER LOD processing, so apply them manually for now.
-
-### Empty to CollisionShape
-Using the property `+CollisionNode` now iterates over all children and looks for any of the `CollisionShape`s (CollisionSphere, CollisionBox, etc.) and will try to make sense of them based on their transforms.
-Setting these on sphere-, box- or arrow empties in blender make for nice representations. Sadly blender does not have a capsule empty but one can imagine it being sliced out of a sphere like a cookie-cutter. 
-`CollisionPolygon` only works partially/experimentally. It's better to use the following implemented technique:
-
-### Decending CollisionPolygons.
-Adding the property `geom_to_collision_polygon` will recursively copy all children's GeomNodes as CollisionPolygons. Tip: Use `$flatten_strong` to combine shapes.
-
 
 ## Dream features:
 * displacement modifiers as ShaderTerrainMesh (partially implemented, still wip)
@@ -50,4 +49,4 @@ Adding the property `geom_to_collision_polygon` will recursively copy all childr
 
 
 ### Note
-Some assumptions are being made and not all blend2bam functionality work. It supports version >2.8 of blender only using pbr materials.
+Some assumptions are being made and not all legacy blend2bam functionality works. It supports version >2.8 of blender only using pbr materials.
