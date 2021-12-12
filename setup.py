@@ -25,7 +25,7 @@ setup(
         'Programming Language :: Python :: 3.8',
     ],
     keywords='panda3d gamedev',
-    url='https://github.com/janentikan/panda3d-boterham',
+    url='https://github.com/TheCheapestPixels/panda3d-boterham',
     author='jan Entikan',
     license='MIT',
     packages=['boterham'],
