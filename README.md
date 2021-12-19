@@ -38,15 +38,28 @@ Set the modifiers ratio to be the furthest LOD.
 Manual LODNodes was already possible by placing the property `+LODNode` (turning its children into switches)
 Note: at the moment subdivision surface modifiers are applied AFTER LOD processing, so apply them manually for now.
 
+### External linking.
+Externally linked collections are turned into empties tagged with their original filename and collection.
+Then load the bam like so, it will look for the linked nodes in relative bams:
+```
+from boterham.loader import boterham_load_model
+
+boterham_load_model('my_model.bam').reparent_to(render)
+```
+Note: At the moment the linked collection should begin with one root node (like an empty) with the same name as the collection.
+This is because blender links collections which are not exported to gltf.
+Also this behavior should be optional but isn't at the moment. All linked instances will turn to tagged empties when using boterham.
+
+### Instances from Geometry Nodes
+Instances made from having a Geometry Node modifier (Blender>3.00) are exported.
+
 ## Dream features:
 * displacement modifiers as ShaderTerrainMesh (partially implemented, still wip)
-* better handle linked instances (for Actors)
 * bake procedural textures as pbr material
 * handle modifiers with regards to shapekeys (convert each shapekey to model, apply modifiers, parent back as shapekey)
 * convert object animation to armature animation
 * mesh to waypoint
 * who knows what else!
-
 
 ### Note
 Some assumptions are being made and not all legacy blend2bam functionality works. It supports version >2.8 of blender only using pbr materials.

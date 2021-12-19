@@ -26,7 +26,6 @@ def make_lod(obj, modifier, nodetype='LODNode'):
         for modifier in obj.modifiers:
             if modifier.type == 'DECIMATE' and modifier.name.split('_')[0] == 'LOD':
                 modifier.ratio = baseline + (i*step_size)
-
                 bpy.ops.object.modifier_apply(modifier=modifier.name)
         copy.name = lod.name + '_LOD_' + str(i)
         copy.data.name = copy.name
@@ -46,7 +45,23 @@ def prepare_modifiers():
                     make_lod(obj, modifier)
                 if modifier.name.split('_')[0] == 'FadeLOD':
                     make_lod(obj, modifier, 'FadeLOD')
+            if modifier.type == 'NODES':
+                bpy.ops.object.select_all(action='DESELECT')
+                obj.select_set(state=True)
+                bpy.ops.object.duplicates_make_real(use_base_parent=True, use_hierarchy=True)
 
+def prepare_instancing():
+    for obj in bpy.data.objects:
+        if obj.is_instancer:
+            collection = bpy.context.object.instance_collection
+            if collection:
+                library = collection.library
+                if library:
+                    link = convert_to_empty(obj)
+                    path = os.path.splitext(str(library.filepath))[0]+'.bam'                     
+                    link['__linked_file'] = path
+                    link['__linked_node'] = collection.name
+                    bpy.data.objects.remove(obj, do_unlink=True)
 
 def export_gltf(settings, src, dst):
     print('Converting .blend file ({}) to .gltf ({})'.format(src, dst))
@@ -56,6 +71,7 @@ def export_gltf(settings, src, dst):
     add_actions_to_nla()
 
     print('Preprocessing')
+    prepare_instancing()
     prepare_modifiers()
     prepare_meshes()
 
@@ -75,7 +91,7 @@ def export_gltf(settings, src, dst):
     with open(dst) as gltf_file:
         gltf_data = json.load(gltf_file)
 
-    export_physics(gltf_data)
+    #export_physics(gltf_data)
     if settings['textures'] == 'ref':
         fix_image_uri(gltf_data)
 

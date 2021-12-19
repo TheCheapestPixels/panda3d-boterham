@@ -96,7 +96,7 @@ def set_lod_switches(nodepath):
     nodepath.node().set_switch(0, furthest**4, furthest_out)
 
 def read_args(root, value_raw):
-    if value_raw == "None" or value_raw == '1':
+    if value_raw == "None" or value_raw == '1' or value_raw == '1.0':
         return []
     extra_args = []
     value_json = json.loads('{'+value_raw+'}')
