@@ -38,8 +38,8 @@ def make_lod(obj, modifier, nodetype='LODNode'):
 def prepare_modifiers():
     for obj in bpy.data.objects:
         for modifier in obj.modifiers:
-            if modifier.type == 'DISPLACE' and modifier.name == 'heightmap':
-                obj['__make_terrain'] = '"extra_args":[{},{}]'.format(modifier.texture.image.filepath, modifier.strength)
+            if modifier.type == 'DISPLACE' and modifier.name == 'ShaderTerrainMesh':
+                obj['__make_terrain'] = '{},{}'.format(modifier.texture.image.filepath, modifier.strength)
             if modifier.type == 'DECIMATE':
                 if modifier.name.split('_')[0] == 'LOD':
                     make_lod(obj, modifier)

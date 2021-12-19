@@ -10,9 +10,7 @@ This place could also serve as a testbed for new blend2bam features.
 
 This project started by ripping everything out of blend2bam. For this reason it should carry blend2bam's license for ever and ever. Any level of professionality in this project is thanks to Moguri.
 
-
-### Don't use this yet.
-But if you do, it works just like blend2bam. After installing do ```boterham myblendfile.blend newbamfile.bam```
+It works just like blend2bam. After installing do ```boterham myblendfile.blend newbamfile.bam```
 
 ## Currently implemented:
 ### Calling NodePath functions and replace with PandaNodes using Custom Properties
@@ -38,23 +36,35 @@ Set the modifiers ratio to be the furthest LOD.
 Manual LODNodes was already possible by placing the property `+LODNode` (turning its children into switches)
 Note: at the moment subdivision surface modifiers are applied AFTER LOD processing, so apply them manually for now.
 
-### External linking.
-Externally linked collections are turned into empties tagged with their original filename and collection.
-Then load the bam like so, it will look for the linked nodes in relative bams:
+### Instances from Geometry Nodes
+Instances created with a Geometry Node modifier (Blender>3.00) are made real and exported.
+
+
+## Model loader
 ```
 from boterham.loader import boterham_load_model
+from direct.showbase.ShowBase import Showbase
 
+base = ShowBase()
 boterham_load_model('my_model.bam').reparent_to(render)
+render.ls()
 ```
+
+### Displacement modifier as ShaderTerrainMesh
+Adding a Z-up `Displacement` modifier to a subdivided plane called `ShaderTerrainMesh` will create a Panda3D `ShaderTerrainMesh` with corresponding `BulletHeightfieldShape` on load.
+I suggest you use a strength of 128 on a plane scaled 1024x1024 untill this system is further fleshed out.
+IMPORTANT: In blender, set the displacement map texture's `color space` to `Linear`.
+Now you can texture paint the heightmap in blender using greyscale brushes. Fun! 
+
+### External linking
+Externally linked collections are turned into empties tagged with their original filename and collection.
+Then load the bam like so, it will look for the linked nodes in relative bams:
+
 Note: At the moment the linked collection should begin with one root node (like an empty) with the same name as the collection.
 This is because blender links collections which are not exported to gltf.
-Also this behavior should be optional but isn't at the moment. All linked instances will turn to tagged empties when using boterham.
-
-### Instances from Geometry Nodes
-Instances made from having a Geometry Node modifier (Blender>3.00) are exported.
+Also this behavior should be optional but isn't at the moment. All linked instances will turn to tagged empties when using boterham. Sorry!
 
 ## Dream features:
-* displacement modifiers as ShaderTerrainMesh (partially implemented, still wip)
 * bake procedural textures as pbr material
 * handle modifiers with regards to shapekeys (convert each shapekey to model, apply modifiers, parent back as shapekey)
 * convert object animation to armature animation
@@ -62,4 +72,4 @@ Instances made from having a Geometry Node modifier (Blender>3.00) are exported.
 * who knows what else!
 
 ### Note
-Some assumptions are being made and not all legacy blend2bam functionality works. It supports version >2.8 of blender only using pbr materials.
+Some assumptions are being made and not all legacy blend2bam functionality works. It supports version >3.0 of blender.

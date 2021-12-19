@@ -1,9 +1,9 @@
 import os
+from .terrain import make_terrain
 
 
 def boterham_load_model(filename):
     root = loader.load_model(filename)
-
     # Load links
     # TODO: Make recursive
     loaded = {}
@@ -21,6 +21,10 @@ def boterham_load_model(filename):
         child.detach_node()
 
     # Setup heightmap
-    pass
-
+    for child in root.find_all_matches('**/=__make_terrain'):
+        filepath, height = child.get_tag('__make_terrain').split(',')
+        terrain_root = make_terrain(filepath, int(float(height)))
+        terrain_root.wrt_reparent_to(child.parent)
+        terrain_root.set_pos(terrain_root, child.get_pos())
+        child.detach_node()
     return root
