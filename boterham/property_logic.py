@@ -32,13 +32,12 @@ def nodepath_to_collision_polygons(root):
 
 def set_collision_shapes(nodepath):
     def get_pos_hpr_scale(np):
-        return np.get_pos(), np.get_hpr(), np.get_scale()    
+        return np.get_pos(), np.get_hpr(), np.get_scale()
 
     def add_shape(nodepath, shape, shape_np):
         nodepath.node().add_solid(shape)
-        nodepath.show()
         shape_np.detach_node()
-       
+
     for shape_np in nodepath.find_all_matches('**/=+CollisionSphere'):
         pos, hpr, scale = get_pos_hpr_scale(shape_np)
         shape = panda3d.core.CollisionSphere(pos[0], pos[1], pos[2], scale[2])
@@ -128,7 +127,7 @@ def tags_as_nodepath_function(root, nodetype=panda3d.core.NodePath('nodepath')):
     for s in custom_sort:
         funcs.remove(s)
         funcs.insert(0, s)
-    
+
     for func in funcs:
         tag = '${}'.format(func)
         for nodepath in root.find_all_matches("**/="+tag):
@@ -176,7 +175,7 @@ def tags_as_class(root):
             value_raw = nodepath.get_tag(tag)
             extra_args = read_args(root, value_raw)
             panda_node_class = getattr(panda3d.core, panda_node)
-            new_node = panda_node_class(nodepath.name + "_"+panda_node)
+            new_node = panda_node_class(nodepath.name)
             new_nodepath = nodepath.parent.attach_new_node(new_node)
             new_nodepath.set_transform(nodepath.get_transform())
             nodepath.clear_tag(tag)
