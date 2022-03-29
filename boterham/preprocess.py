@@ -58,10 +58,27 @@ def prepare_instancing():
                 library = collection.library
                 if library:
                     link = convert_to_empty(obj)
-                    path = os.path.splitext(str(library.filepath))[0]+'.bam'                     
+                    path = os.path.splitext(str(library.filepath))[0]+'.bam'
                     link['__linked_file'] = path
                     link['__linked_node'] = collection.name
                     bpy.data.objects.remove(obj, do_unlink=True)
+
+def prepare_wireframe():
+    for obj in bpy.data.objects:
+        if obj.show_wire:
+            color = tuple(obj.color)
+            duplicate = duplicate_obj(obj)
+            duplicate.show_wire = False
+            bpy.context.view_layer.objects.active = duplicate
+            select_obj(None)
+            bpy.ops.object.mode_set(mode='EDIT')
+            bpy.ops.mesh.select_all(action='SELECT')
+            bpy.ops.mesh.delete(type='ONLY_FACE')
+            bpy.ops.object.mode_set(mode='OBJECT')
+            duplicate.name = 'wireframe_'+obj.name
+            duplicate['$set_color'] = '"extra_args":[{}]'.format(list(color))
+            duplicate.parent = obj
+
 
 def export_gltf(settings, src, dst):
     print('Converting .blend file ({}) to .gltf ({})'.format(src, dst))
@@ -71,6 +88,7 @@ def export_gltf(settings, src, dst):
     add_actions_to_nla()
 
     print('Preprocessing')
+    prepare_wireframe()
     prepare_instancing()
     prepare_modifiers()
     prepare_meshes()
@@ -86,6 +104,8 @@ def export_gltf(settings, src, dst):
         export_apply=True,
         export_tangents=True,
         export_animations=settings['animations'] != 'skip',
+        use_mesh_edges=True,
+        use_mesh_vertices=True,
     )
 
     with open(dst) as gltf_file:

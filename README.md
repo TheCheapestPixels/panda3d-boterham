@@ -16,7 +16,7 @@ It works just like blend2bam. After installing do ```boterham myblendfile.blend 
 ### Calling NodePath functions and replace with PandaNodes using Custom Properties
 Adding a custom property in blender whose name starts with the symbol `$` will run it as a function on the NodePath. For example adding `$reparent_to` or `$flatten_strong`. You can pass arguments to this function using a dict as property value as followed: `"extra_args":[some_value]`. This is evaluated as JSON.
 
-A property starting with `$node().` will run the function on the first attached PandaNode. For example on a DirectionalLight one could do `$node().set_color` with value `"extra_args":[(1,0,0,1)]` to make it shine red.
+A property starting with `$node().` will run the function on the first attached PandaNode. For example on a DirectionalLight one could do `$node().set_color` with value `"extra_args":[[1,0,0,1]]` to make it shine red.
 
 This is especially useful in combination with node replacement, by starting a property name with the symbol `+`. For example on an empty, one could add the property `+SequenceNode` to turn it into a sequence node. Add another property `$node().loop` to make it start playing in an endless loop.
 
@@ -24,7 +24,7 @@ An argument that starts with the symbol `@` will be replaced with the first node
 
 ### Empty to CollisionShape
 Using the property `+CollisionNode` now iterates over all children and looks for any of the `+CollisionShape`s (`+CollisionSphere`, `+CollisionBox`, etc.) and will try to make sense of them based on their transforms.
-Setting these on sphere-, box- or arrow empties in blender make for nice representations. Sadly blender does not have a capsule empty but one can imagine it being sliced out of a sphere like a cookie-cutter. 
+Setting these on sphere-, box- or arrow empties in blender make for nice representations. Sadly blender does not have a capsule empty but one can imagine it being sliced out of a sphere like a cookie-cutter.
 `+CollisionPolygon` only works partially/experimentally. It's better to use the following implemented technique:
 
 ### Decending CollisionPolygons.
@@ -54,7 +54,7 @@ render.ls()
 Adding a Z-up `Displacement` modifier to a subdivided plane called `ShaderTerrainMesh` will create a Panda3D `ShaderTerrainMesh` with corresponding `BulletHeightfieldShape` on load.
 I suggest you use a strength of 128 on a plane scaled 1024x1024 untill this system is further fleshed out.
 IMPORTANT: In blender, set the displacement map texture's `color space` to `Linear`.
-Now you can texture paint the heightmap in blender using greyscale brushes. Fun! 
+Now you can texture paint the heightmap in blender using greyscale brushes. Fun!
 
 ### External linking
 Externally linked collections are turned into empties tagged with their original filename and collection.
@@ -63,6 +63,10 @@ Then load the bam like so, it will look for the linked nodes in relative bams:
 Note: At the moment the linked collection should begin with one root node (like an empty) with the same name as the collection.
 This is because blender links collections which are not exported to gltf.
 Also this behavior should be optional but isn't at the moment. All linked instances will turn to tagged empties when using boterham. Sorry!
+
+### Wireframe
+When you check the "wireframe" option in the viewport display menu in the object tab, boterham duplicates the object and removes all the faces, leaving behind the edges.
+These edges will be colored by the object color, as set in the same menu.
 
 ## Dream features:
 * bake procedural textures as pbr material

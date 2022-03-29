@@ -98,7 +98,12 @@ def read_args(root, value_raw):
     if value_raw == "None" or value_raw == '1' or value_raw == '1.0':
         return []
     extra_args = []
-    value_json = json.loads('{'+value_raw+'}')
+    try:
+        value_json = json.loads('{'+value_raw+'}')
+    except json.decoder.JSONDecodeError:
+        print('error, json cant decode:', value_raw)
+        sys.exit(1)
+
     if 'extra_args' in value_json:
         if type(value_json['extra_args']) == list:
             for arg in value_json['extra_args']:
@@ -110,6 +115,8 @@ def read_args(root, value_raw):
                         else:
                             print('could not find {}'.format(arg))
                             sys.exit(1)
+                if type(arg) == list:
+                    arg = tuple(arg)
                 extra_args.append(arg)
         else:
             print('extra_args of {} is not a list'.format(tag))

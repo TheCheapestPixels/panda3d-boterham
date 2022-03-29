@@ -8,4 +8,5 @@ def postprocess(filename):
     print('post-processing', filename)
     root = loader.load_model(filename)
     evaluate_property_logic(root)
+    root.set_render_mode_thickness(2)
     root.write_bam_file(filename)

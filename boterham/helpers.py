@@ -1,9 +1,10 @@
 import bpy
 
-def select_obj(obj, append=False):
+def select_obj(obj=None, append=False):
     if not append:
         bpy.ops.object.select_all(action='DESELECT')
-    obj.select_set(state=True)
+    if obj:
+        obj.select_set(state=True)
 
 def duplicate_obj(obj, select=True):
     if obj:
