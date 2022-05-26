@@ -69,6 +69,7 @@ When you check the "wireframe" option in the viewport display menu in the object
 These edges will be colored by the object color, as set in the same menu.
 
 ## Dream features:
+* apply mirror and array modifiers as separated and recentered meshes
 * bake procedural textures as pbr material
 * handle modifiers with regards to shapekeys (convert each shapekey to model, apply modifiers, parent back as shapekey)
 * convert object animation to armature animation
