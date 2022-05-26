@@ -53,7 +53,7 @@ def prepare_modifiers():
 def prepare_instancing():
     for obj in bpy.data.objects:
         if obj.is_instancer:
-            collection = bpy.context.object.instance_collection
+            collection = obj.instance_collection
             if collection:
                 library = collection.library
                 if library:
