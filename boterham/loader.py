@@ -17,7 +17,7 @@ def boterham_load_model(filename):
             file = loaded[path] = boterham_load_model(path)
         node = file.find('**/'+nodename)
         if not node:
-            raise "Couldn't find nodepath " + nodename + " in blend " + path
+            raise Exception("Couldn't find nodepath " + nodename + " in blend " + path)
         instance = node.copy_to(child.parent)
         instance.set_transform(child.get_transform())
         child.detach_node()
