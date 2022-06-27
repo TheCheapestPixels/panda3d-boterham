@@ -26,6 +26,7 @@ An argument that starts with the symbol `@` will be replaced with the first node
 Using the property `+CollisionNode` now iterates over all children and looks for any of the `+CollisionShape`s (`+CollisionSphere`, `+CollisionBox`, etc.) and will try to make sense of them based on their transforms.
 Setting these on sphere-, box- or arrow empties in blender make for nice representations. Sadly blender does not have a capsule empty but one can imagine it being sliced out of a sphere like a cookie-cutter.
 `+CollisionPolygon` only works partially/experimentally. It's better to use the following implemented technique:
+NOTE: Contrary to panda3d's defaults, boterham sets each CollisionNode's CollideMask to 0 meaning they don't do anything without first setting a CollideMask. You could set this manualy with the `$set_collide_mask` property if you wanted to.
 
 ### Decending CollisionPolygons.
 Adding the property `geom_to_collision_polygon` will recursively copy all children's GeomNodes as CollisionPolygons. Tip: Use `$flatten_strong` to combine shapes.
@@ -39,8 +40,13 @@ Note: at the moment subdivision surface modifiers are applied AFTER LOD processi
 ### Instances from Geometry Nodes
 Instances created with a Geometry Node modifier (Blender>3.00) are made real and exported.
 
+### Wireframe
+When you check the "wireframe" option in the viewport display menu in the object tab, boterham duplicates the object and removes all the faces, leaving behind the edges.
+These edges will be colored by the object color, as set in the same menu.
 
 ## Model loader
+Some features require you to use the boterham model loader so it can set up parts of the scenegraph that don't get stored into a bam.
+It should be a drop-in replacement for loader.load_model like so:
 ```
 from boterham.loader import boterham_load_model
 from direct.showbase.ShowBase import Showbase
@@ -49,6 +55,7 @@ base = ShowBase()
 boterham_load_model('my_model.bam').reparent_to(render)
 render.ls()
 ```
+This would enable you to use the following features:
 
 ### Displacement modifier as ShaderTerrainMesh
 Adding a Z-up `Displacement` modifier to a subdivided plane called `ShaderTerrainMesh` will create a Panda3D `ShaderTerrainMesh` with corresponding `BulletHeightfieldShape` on load.
@@ -63,10 +70,6 @@ Then load the bam like so, it will look for the linked nodes in relative bams:
 Note: At the moment the linked collection should begin with one root node (like an empty) with the same name as the collection.
 This is because blender links collections which are not exported to gltf.
 Also this behavior should be optional but isn't at the moment. All linked instances will turn to tagged empties when using boterham. Sorry!
-
-### Wireframe
-When you check the "wireframe" option in the viewport display menu in the object tab, boterham duplicates the object and removes all the faces, leaving behind the edges.
-These edges will be colored by the object color, as set in the same menu.
 
 ## Dream features:
 * store vertex groups as list of vertex indices
