@@ -201,7 +201,7 @@ def tags_as_class(root):
                 set_lod_switches(nodepath)
             if panda_node == 'CollisionNode':
                 set_collision_shapes(nodepath)
-
+                nodepath.set_collide_mask(0)
 
 def evaluate_property_logic(root):
     tags_as_class(root)
