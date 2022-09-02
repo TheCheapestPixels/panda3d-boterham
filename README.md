@@ -76,6 +76,7 @@ Also this behavior should be optional but isn't at the moment. All linked instan
 * apply mirror and array modifiers as separated and recentered meshes
 * bake procedural textures as pbr material
 * handle modifiers with regards to shapekeys (convert each shapekey to model, apply modifiers, parent back as shapekey)
+* expose objects to bones
 * convert object animation to armature animation
 * mesh to waypoint
 * who knows what else!
