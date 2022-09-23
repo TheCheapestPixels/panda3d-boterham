@@ -13,7 +13,7 @@ from .postprocess import postprocess
 
 def convert(settings, srcdir, src, dst):
     from blend2bam.gltf2bam import ConverterGltf2Bam
-    from blend2bam.blend2gltf import ConverterBlend2Gltf28
+    from .converters import ConverterBlend2Gltf28
     tmp2dst = ConverterGltf2Bam(settings)
     tmpext = '.gltf'
     src2tmp = ConverterBlend2Gltf28(settings)
