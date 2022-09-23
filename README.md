@@ -72,7 +72,6 @@ This is because blender links collections which are not exported to gltf.
 Also this behavior should be optional but isn't at the moment. All linked instances will turn to tagged empties when using boterham. Sorry!
 
 ## Dream features:
-* support bullet 
 * store vertex groups as list of vertex indices
 * apply mirror and array modifiers as separated and recentered meshes
 * bake procedural textures as pbr material
@@ -80,6 +79,7 @@ Also this behavior should be optional but isn't at the moment. All linked instan
 * expose objects to bones
 * convert object animation to armature animation
 * mesh to waypoint
+* boterhamview, pview but it hot-reloads updated .blend files (through pman?)
 * who knows what else!
 
 ### Note
